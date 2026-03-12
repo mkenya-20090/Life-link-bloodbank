@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Recipient Dashboard - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Recipient Dashboard</h1>
+    <p>Welcome back, {{ session.name }}!</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card red">
+        <div class="stat-icon">🩸</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.active_requests }}</div>
+            <div class="stat-label">Active Requests</div>
+        </div>
+    </div>
+    <div class="stat-card blue">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.upcoming_appointments }}</div>
+            <div class="stat-label">Upcoming Appts</div>
+        </div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.fulfilled_requests }}</div>
+            <div class="stat-label">Fulfilled</div>
+        </div>
+    </div>
+</div>
+
+<div class="two-col">
+    <div class="section-card">
+        <div class="section-header">
+            <h3>Active Requests</h3>
+            <a href="{{ url_for('recipient_requests') }}" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        {% for request in active_requests %}
+            <div class="appt-item">
+                <div class="appt-date">{{ request.request_date.strftime('%b %d') }}</div>
+                <div class="appt-info">
+                    <strong>{{ request.units }} units {{ request.blood_group }}</strong>
+                    <span>{{ request.status }} - {{ request.urgency }}</span>
+                </div>
+            </div>
+        {% else %}
+            <p class="empty-state">No active requests. <a href="{{ url_for('recipient_requests') }}">Create one now</a></p>
+        {% endfor %}
+    </div>
+
+    <div class="section-card">
+        <div class="section-header">
+            <h3>Upcoming Appointments</h3>
+            <a href="{{ url_for('recipient_appointments') }}" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        {% for appointment in upcoming_appointments %}
+            <div class="appt-item">
+                <div class="appt-date">{{ appointment.appointment_date.strftime('%b %d') }}</div>
+                <div class="appt-info">
+                    <strong>Collection - {{ appointment.appointment_time }}</strong>
+                    <span>{{ appointment.status }}</span>
+                </div>
+            </div>
+        {% else %}
+            <p class="empty-state">No upcoming appointments. <a href="{{ url_for('recipient_appointments') }}">Book one now</a></p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

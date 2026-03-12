@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Admin Dashboard</h1>
+    <p>Overview of blood bank operations</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card red">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.total_users }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+    </div>
+    <div class="stat-card blue">
+        <div class="stat-icon">🩸</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.total_donations }}</div>
+            <div class="stat-label">Total Donations</div>
+        </div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.pending_requests }}</div>
+            <div class="stat-label">Pending Requests</div>
+        </div>
+    </div>
+    <div class="stat-card orange">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.total_appointments }}</div>
+            <div class="stat-label">Completed Appointments</div>
+        </div>
+    </div>
+</div>
+
+<div class="charts-grid">
+    <div class="chart-card">
+        <h3>Blood Inventory Distribution</h3>
+        <canvas id="bloodGroupChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Monthly Donations</h3>
+        <canvas id="donationChart"></canvas>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="application/json" id="chart-data">
+{{ {'blood_groups': blood_groups, 'blood_group_counts': blood_group_counts, 'months': months, 'monthly_donations': monthly_donations} | tojson }}
+</script>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

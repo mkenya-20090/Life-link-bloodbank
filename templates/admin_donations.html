@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Donations - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Manage Donations</h1>
+    <p>View and manage blood donations</p>
+</div>
+
+<div class="section-card">
+    <h3>All Donations</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Donor</th>
+                <th>Blood Group</th>
+                <th>Units</th>
+                <th>Status</th>
+                <th>Donation Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for donation in donations %}
+                <tr>
+                    <td>{{ donation.donor_name }}</td>
+                    <td><span class="blood-badge">{{ donation.blood_group }}</span></td>
+                    <td>{{ donation.units }}</td>
+                    <td><span class="badge status-{{ donation.status }}">{{ donation.status }}</span></td>
+                    <td>{{ donation.donation_date }}</td>
+                    <td>
+                        <button class="btn btn-xs btn-outline" onclick="openModal('donationModal{{ donation.id }}')">View</button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="empty">No donations found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h3>Add New Donation</h3>
+    </div>
+    <form method="POST" class="form-grid">
+        <div class="form-group">
+            <label for="donor_id">Donor</label>
+            <select id="donor_id" name="donor_id" required>
+                <option value="">Select Donor</option>
+                {% for donor in donors %}
+                <option value="{{ donor.id }}">{{ donor.name }} ({{ donor.blood_group }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="facility_id">Facility</label>
+            <select id="facility_id" name="facility_id">
+                <option value="">Select Facility (optional)</option>
+                {% for facility in facilities %}
+                <option value="{{ facility.id }}">{{ facility.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="donation_date">Donation Date</label>
+            <input type="date" id="donation_date" name="donation_date" value="{{ today }}" required>
+        </div>
+        <div class="form-group">
+            <label for="blood_group">Blood Group</label>
+            <select id="blood_group" name="blood_group" required>
+                <option value="">Select Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="units">Units</label>
+            <input type="number" id="units" name="units" step="0.1" min="0.1" value="1.0" required>
+        </div>
+        <div class="form-group full">
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" name="notes" rows="3"></textarea>
+        </div>
+        <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Add Donation</button>
+        </div>
+    </form>
+</div>
+
+{% for donation in donations %}
+<div id="donationModal{{ donation.id }}" class="modal">
+    <div class="modal-box">
+        <h4>Donation Details</h4>
+        <p><strong>Donor:</strong> {{ donation.donor_name }}</p>
+        <p><strong>Blood Group:</strong> {{ donation.blood_group }}</p>
+        <p><strong>Units:</strong> {{ donation.units }}</p>
+        <p><strong>Status:</strong> {{ donation.status }}</p>
+        <p><strong>Notes:</strong> {{ donation.notes or 'None' }}</p>
+        <div class="form-actions">
+            <button type="button" class="btn btn-outline" onclick="closeModal('donationModal{{ donation.id }}')">Close</button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

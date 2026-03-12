@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>My Profile</h1>
+    <p>Manage your account information</p>
+</div>
+
+<div class="section-card">
+    <h3>Personal Information</h3>
+    <form method="POST" class="form-grid">
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" value="{{ user.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" value="{{ user.phone }}">
+        </div>
+        <div class="form-group">
+            <label for="blood_group">Blood Group</label>
+            <input type="text" id="blood_group" value="{{ user.blood_group }}" readonly>
+        </div>
+        <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

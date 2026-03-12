@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Register - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card wide">
+        <div class="auth-header">
+            <div class="auth-logo">🩸</div>
+            <h2>Join LifeLink</h2>
+            <p>Create your account</p>
+        </div>
+        <form method="POST" class="auth-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="blood_group">Blood Group</label>
+                    <select id="blood_group" name="blood_group" required>
+                        <option value="">Select Blood Group</option>
+                        {% for bg in blood_groups %}
+                            <option value="{{ bg }}">{{ bg }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="role">I am a</label>
+                    <select id="role" name="role" required>
+                        <option value="">Select Role</option>
+                        <option value="donor">Blood Donor</option>
+                        <option value="recipient">Blood Recipient</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+        </form>
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Sign in here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

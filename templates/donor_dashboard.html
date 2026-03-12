@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Donor Dashboard - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Donor Dashboard</h1>
+    <p>Welcome back, {{ session.name }}!</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card red">
+        <div class="stat-icon">🩸</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.total_donations }}</div>
+            <div class="stat-label">My Donations</div>
+        </div>
+    </div>
+    <div class="stat-card blue">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.upcoming_appointments }}</div>
+            <div class="stat-label">Upcoming Appts</div>
+        </div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.lives_saved }}</div>
+            <div class="stat-label">Lives Saved</div>
+        </div>
+    </div>
+    <div class="stat-card purple">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+            <div class="stat-num">{{ stats.completed_appointments }}</div>
+            <div class="stat-label">Completed Appts</div>
+        </div>
+    </div>
+</div>
+
+<div class="two-col">
+    <div class="section-card">
+        <div class="section-header">
+            <h3>Recent Donations</h3>
+            <a href="{{ url_for('donor_donations') }}" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        {% for donation in recent_donations %}
+            <div class="appt-item">
+                <div class="appt-date">{{ donation.donation_date.strftime('%b %d') }}</div>
+                <div class="appt-info">
+                    <strong>{{ donation.units }} units</strong>
+                    <span>{{ donation.status }}</span>
+                </div>
+            </div>
+        {% else %}
+            <p class="empty-state">No donations yet. <a href="{{ url_for('donor_appointments') }}">Schedule your first donation</a></p>
+        {% endfor %}
+    </div>
+
+    <div class="section-card">
+        <div class="section-header">
+            <h3>Upcoming Appointments</h3>
+            <a href="{{ url_for('donor_appointments') }}" class="btn btn-outline btn-sm">View All</a>
+        </div>
+        {% for appointment in upcoming_appointments %}
+            <div class="appt-item">
+                <div class="appt-date">{{ appointment.appointment_date.strftime('%b %d') }}</div>
+                <div class="appt-info">
+                    <strong>Donation</strong>
+                    <span>{{ appointment.appointment_time }}</span>
+                </div>
+            </div>
+        {% else %}
+            <p class="empty-state">No upcoming appointments. <a href="{{ url_for('donor_appointments') }}">Book one now</a></p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

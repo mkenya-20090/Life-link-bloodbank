@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}My Requests - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>My Blood Requests</h1>
+    <p>Manage your blood donation requests</p>
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h3>Create New Request</h3>
+    </div>
+    <form method="POST" class="form-grid">
+        <div class="form-group">
+            <label for="blood_group">Blood Group Needed</label>
+            <select id="blood_group" name="blood_group" required>
+                <option value="">Select Blood Group</option>
+                {% for bg in blood_groups %}
+                    <option value="{{ bg }}">{{ bg }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="units">Units Needed</label>
+            <input type="number" id="units" name="units" min="1" step="0.5" required>
+        </div>
+        <div class="form-group">
+            <label for="urgency">Urgency</label>
+            <select id="urgency" name="urgency" required>
+                <option value="normal">Normal</option>
+                <option value="urgent">Urgent</option>
+                <option value="critical">Critical</option>
+            </select>
+        </div>
+        <div class="form-group full">
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" name="notes" rows="3"></textarea>
+        </div>
+        <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+    </form>
+</div>
+
+<div class="section-card">
+    <h3>My Requests</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Blood Group</th>
+                <th>Units</th>
+                <th>Urgency</th>
+                <th>Status</th>
+                <th>Request Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+                <tr>
+                    <td><span class="blood-badge">{{ request.blood_group }}</span></td>
+                    <td>{{ request.units }}</td>
+                    <td><span class="badge urgency-{{ request.urgency }}">{{ request.urgency }}</span></td>
+                    <td><span class="badge status-{{ request.status }}">{{ request.status }}</span></td>
+                    <td>{{ request.request_date }}</td>
+                    <td>
+                        {% if request.status == 'approved' %}
+                            <a href="{{ url_for('blood_match', request_id=request.id) }}" class="btn btn-xs btn-primary">Find Match</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="empty">No requests found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Home - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="landing">
+    <section class="landing-hero">
+        <div class="hero-content">
+            <div class="hero-badge">🩸 Life-Saving Platform</div>
+            <h1 class="hero-title">Connect <span class="accent">Donors</span> & Recipients</h1>
+            <p class="hero-sub">A modern blood bank management system that connects blood donors with those in need. Join our community and save lives today.</p>
+            <div class="hero-actions">
+                {% if not session.user_id %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Join as Donor</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline btn-lg">Need Blood?</a>
+                {% else %}
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="blood-orb">
+                <div class="orb-inner">
+                    <div class="orb-icon">🩸</div>
+                    <div class="orb-text">LifeLink</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="landing-features">
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h3>Easy Registration</h3>
+            <p>Quick and simple registration process for donors and recipients.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3>Appointment Booking</h3>
+            <p>Schedule donation or collection appointments with ease.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <h3>Blood Matching</h3>
+            <p>Advanced compatibility matching for safe transfusions.</p>
+        </div>
+    </section>
+</div>
+{% endblock %}
