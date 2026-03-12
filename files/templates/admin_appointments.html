@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Appointments - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Manage Appointments</h1>
+    <p>View and manage all appointments</p>
+</div>
+
+<div class="section-card">
+    <h3>All Appointments</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.user_name }}</td>
+                    <td><span class="badge type-{{ appointment.type }}">{{ appointment.type }}</span></td>
+                    <td>{{ appointment.appointment_date }}</td>
+                    <td>{{ appointment.appointment_time }}</td>
+                    <td><span class="badge status-{{ appointment.status }}">{{ appointment.status }}</span></td>
+                    <td>
+                        {% if appointment.status == 'scheduled' %}
+                            <button class="btn btn-xs btn-primary" data-appointment-id="{{ appointment.id }}" onclick="completeAppointment(this.dataset.appointmentId)">Complete</button>
+                        {% endif %}
+                        <button class="btn btn-xs btn-outline" data-appointment-id="{{ appointment.id }}" onclick="openModal('appointmentModal' + this.dataset.appointmentId)">View</button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="empty">No appointments found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% for appointment in appointments %}
+<div id="appointmentModal{{ appointment.id }}" class="modal">
+    <div class="modal-box">
+        <h4>Appointment Details</h4>
+        <p><strong>User:</strong> {{ appointment.user_name }}</p>
+        <p><strong>Type:</strong> {{ appointment.type }}</p>
+        <p><strong>Date:</strong> {{ appointment.appointment_date }}</p>
+        <p><strong>Time:</strong> {{ appointment.appointment_time }}</p>
+        <p><strong>Status:</strong> {{ appointment.status }}</p>
+        <p><strong>Notes:</strong> {{ appointment.notes or 'None' }}</p>
+        <div class="form-actions">
+            <button type="button" class="btn btn-outline" onclick="closeModal('appointmentModal{{ appointment.id }}')">Close</button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+function completeAppointment(id) {
+    if (confirm('Mark this appointment as completed?')) {
+        fetch('/admin/complete_appointment/' + id, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Appointment completed successfully! The dashboard has been updated.');
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Failed to complete appointment: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while completing the appointment');
+            });
+    }
+}
+</script>
+{% endblock %}

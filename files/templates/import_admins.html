@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Import Admins - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Import Admin Users</h1>
+    <p>Bulk import admin users from CSV file</p>
+</div>
+
+<div class="section-card">
+    <h3>Upload CSV File</h3>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="csv_file">Select CSV File</label>
+            <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Import Admins</button>
+        </div>
+    </form>
+</div>
+
+<div class="csv-format-box">
+    <h4>CSV Format</h4>
+    <p>The CSV file should have the following columns:</p>
+    <code>name,email,password,phone,blood_group,facility_id</code>
+    <p>Example:</p>
+    <code>name,email,password,phone,blood_group,facility_id<br>Dr. Sarah Johnson,sarah@hospital.com,pass123,555-1111,A+,1</code>
+</div>
+{% endblock %}

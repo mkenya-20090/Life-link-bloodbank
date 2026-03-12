@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}My Appointments - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>My Appointments</h1>
+    <p>Manage your donation appointments</p>
+</div>
+
+<div class="section-card">
+    <div class="section-header">
+        <h3>Book New Appointment</h3>
+    </div>
+    <form method="POST" class="form-grid">
+        <div class="form-group">
+            <label for="facility_id">Facility</label>
+            <select id="facility_id" name="facility_id" required>
+                <option value="">Select Facility</option>
+                {% for facility in facilities %}
+                <option value="{{ facility.id }}">{{ facility.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="appointment_date">Date</label>
+            <input type="date" id="appointment_date" name="appointment_date" min="{{ today }}" required>
+        </div>
+        <div class="form-group">
+            <label for="appointment_time">Time</label>
+            <input type="time" id="appointment_time" name="appointment_time" required>
+        </div>
+        <div class="form-group full">
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" name="notes" rows="3"></textarea>
+        </div>
+        <div class="form-actions full">
+            <button type="submit" class="btn btn-primary">Book Appointment</button>
+        </div>
+    </form>
+</div>
+
+<div class="section-card">
+    <h3>My Appointments</h3>
+    {% for appointment in appointments %}
+        <div class="appt-item">
+            <div class="appt-date">{{ appointment.appointment_date[5:7] }}/{{ appointment.appointment_date[8:10] }}</div>
+            <div class="appt-info">
+                <strong>Donation - {{ appointment.appointment_time }}</strong>
+                <span>Status: {{ appointment.status }}</span>
+            </div>
+        </div>
+    {% else %}
+        <p class="empty-state">No appointments scheduled</p>
+    {% endfor %}
+</div>
+{% endblock %}

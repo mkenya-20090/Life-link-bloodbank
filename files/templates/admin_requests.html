@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Requests - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Manage Blood Requests</h1>
+    <p>View and manage blood donation requests</p>
+</div>
+
+<div class="section-card">
+    <h3>All Requests</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Recipient</th>
+                <th>Blood Group</th>
+                <th>Units</th>
+                <th>Urgency</th>
+                <th>Status</th>
+                <th>Request Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+                <tr>
+                    <td>{{ request.recipient_name }}</td>
+                    <td><span class="blood-badge">{{ request.blood_group }}</span></td>
+                    <td>{{ request.units }}</td>
+                    <td><span class="badge urgency-{{ request.urgency }}">{{ request.urgency }}</span></td>
+                    <td><span class="badge status-{{ request.status }}">{{ request.status }}</span></td>
+                    <td>{{ request.request_date }}</td>
+                    <td>
+                        {% if request.status == 'pending' %}
+                            <button class="btn btn-xs btn-primary" data-request-id="{{ request.id }}" onclick="approveRequest(this.dataset.requestId)">Approve</button>
+                        {% endif %}
+                        <button class="btn btn-xs btn-outline" data-request-id="{{ request.id }}" onclick="openModal('requestModal' + this.dataset.requestId)">View</button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="empty">No requests found</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% for request in requests %}
+<div id="requestModal{{ request.id }}" class="modal">
+    <div class="modal-box">
+        <h4>Request Details</h4>
+        <p><strong>Recipient:</strong> {{ request.recipient_name }}</p>
+        <p><strong>Blood Group:</strong> {{ request.blood_group }}</p>
+        <p><strong>Units:</strong> {{ request.units }}</p>
+        <p><strong>Urgency:</strong> {{ request.urgency }}</p>
+        <p><strong>Status:</strong> {{ request.status }}</p>
+        <p><strong>Notes:</strong> {{ request.notes or 'None' }}</p>
+        <div class="form-actions">
+            <button type="button" class="btn btn-outline" onclick="closeModal('requestModal{{ request.id }}')">Close</button>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function approveRequest(id) {
+    if (confirm('Approve this request?')) {
+        fetch('/admin/approve_request/' + id, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Failed to approve request');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while approving the request');
+            });
+    }
+}
+</script>
+{% endblock %}

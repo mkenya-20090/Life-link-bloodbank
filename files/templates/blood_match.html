@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Blood Match - LifeLink Blood Bank{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Blood Compatibility Match</h1>
+    <p>Find compatible donors for your blood request</p>
+</div>
+
+<div class="section-card">
+    <h3>Request Details</h3>
+    <div class="match-info">
+        <div class="match-details">
+            <div class="match-item">
+                <label>Blood Group Needed:</label>
+                <span class="blood-badge">{{ request.blood_group }}</span>
+            </div>
+            <div class="match-item">
+                <label>Units Required:</label>
+                <span>{{ request.units }}</span>
+            </div>
+            <div class="match-item">
+                <label>Urgency:</label>
+                <span class="badge urgency-{{ request.urgency }}">{{ request.urgency }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-card">
+    <h3>Compatible Donors</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Blood Group</th>
+                <th>Phone</th>
+                <th>Last Donation</th>
+                <th>Available Units</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for donor in compatible_donors %}
+                <tr>
+                    <td>{{ donor.name }}</td>
+                    <td><span class="blood-badge">{{ donor.blood_group }}</span></td>
+                    <td>{{ donor.phone }}</td>
+                    <td>{{ donor.last_donation or 'Never' }}</td>
+                    <td>{{ donor.available_units }}</td>
+                    <td>
+                        <button class="btn btn-xs btn-primary" onclick="contactDonor('{{ donor.phone }}')">Contact</button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="empty">No compatible donors found at this time</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="info-box">
+    <h4>Compatibility Information</h4>
+    <p>Your blood group ({{ request.blood_group }}) can receive from: {{ ', '.join(compatible_groups) }}</p>
+    <p class="text-success">✓ Compatible donors are shown above</p>
+    <p class="text-warn">⚠ If no donors are available, please check back later or contact the blood bank</p>
+</div>
+
+<script>
+function contactDonor(phone) {
+    if (confirm('Contact donor at ' + phone + '?')) {
+        window.location.href = 'tel:' + phone;
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LifeLink Blood Bank{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="blood-drop">🩸</div>
+            <div>
+                <div class="brand-name">LifeLink</div>
+                <div class="brand-sub">Blood Bank</div>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+            {% if session.user_id %}
+                {% if session.role == 'admin' %}
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link">Admin</a>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                            <a href="{{ url_for('admin_users') }}">Users</a>
+                            <a href="{{ url_for('admin_requests') }}">Requests</a>
+                            <a href="{{ url_for('admin_donations') }}">Donations</a>
+                            <a href="{{ url_for('admin_appointments') }}">Appointments</a>
+                            <a href="{{ url_for('import_admins') }}">Import Admins</a>
+                        </div>
+                    </div>
+                {% elif session.role == 'donor' %}
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link">Donor</a>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                            <a href="{{ url_for('donor_donations') }}">My Donations</a>
+                            <a href="{{ url_for('donor_appointments') }}">Appointments</a>
+                        </div>
+                    </div>
+                {% elif session.role == 'recipient' %}
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link">Recipient</a>
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                            <a href="{{ url_for('recipient_requests') }}">My Requests</a>
+                            <a href="{{ url_for('recipient_appointments') }}">Appointments</a>
+                        </div>
+                    </div>
+                {% endif %}
+                <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
+            {% endif %}
+        </div>
+        <div class="nav-user">
+            {% if session.user_id %}
+                <span class="user-name">{{ session.name }}</span>
+                <span class="user-badge {{ session.role }}">{{ session.role }}</span>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'error' else 'warning' if category == 'warning' else 'info' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,5 @@
+name,email,password,phone,blood_group,facility_id
+Dr. Sarah Johnson,sarah@hospital.com,pass123,555-1111,A+,1
+Dr. Mark Williams,mark@stmarys.com,pass456,555-2222,B+,2
+Nurse Emily Chen,emily@bloodbank.com,pass789,555-3333,O-,3
+Dr. James Brown,james@hospital.com,secure01,555-4444,AB+,1
